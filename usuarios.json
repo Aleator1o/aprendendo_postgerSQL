@@ -1,0 +1,34 @@
+{
+    "usuarios" : [
+        [
+
+            {
+                "nome" : "Reginaldo",
+
+                "idade" : 30
+            },
+
+            {
+                "nome" : "Marcolino",
+
+                "idade" : 34
+            }
+        ],
+        
+        [
+            {
+                "pet" : "cachorro",
+
+                "nome_pet" : "ksjdhf"
+            },
+
+            {
+                "pet" : "gato",
+
+                "nome_pet" : "jerferson"
+            }
+        ]
+    ]
+
+
+}

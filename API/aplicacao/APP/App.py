@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request, redirect
 import psycopg2
 from APP.info_pessoal import *
 
@@ -13,23 +13,55 @@ app= Flask(__name__)
 
 #=======================================================
 
-@app.route('/')
-def rota_vaizia():
-    return 'Deu bom a troca, sem falhas'
+#====================CADASTRO USUARIO=========================
 
-
-@app.route('/usuarios/')
+@app.route('/cadastro/', methods=['GET'])
 def mostrando_usuarios():
-    cur.execute('SELECT * FROM usuarios ORDER BY id_usuario ASC')
-    mostrando_usuarios_ordem_crescente_id= cur.fetchall()
-    return render_template('index.html', mostrando_usuarios_crescente_id= mostrando_usuarios_ordem_crescente_id)
+    return render_template('registro.html')
 
 
-@app.route('/usuario_ordem/')
+
+@app.route('/verificando/cadastro/', methods=['POST'])
+def verificando_cadastro():
+    cur.execute("SELECT email FROM usuarios")
+    verificando_email= cur.fetchall()
+
+    for email in verificando_email:
+        if request.form['email'] == email[0]:
+            return redirect('/cadastro/')
+    
+
+    cur.execute(f"INSERT INTO usuarios(nome_usuario, email, senha) VALUES('{request.form['nome_usuario']}', '{request.form['email']}', {request.form['senha']})")
+    conn.commit()
+
+
+    return redirect('/login/')
+
+#====================CADASTRO USUARIO=========================
+
+
+
+
+
+#====================LOGIN USUARIO=========================
+@app.route('/login/', methods=['GET'])
 def mostrando_usuarios_ordem():
-    cur.execute('SELECT * FROM usuarios ORDER BY id_usuario ASC')
-    mostrando_usuarios_ordem_crescente_id= cur.fetchall()
-    return render_template('usuario_ordem.html', mostrando_usuarios_crescente_id= mostrando_usuarios_ordem_crescente_id)
+    return render_template('login.html')
+
+
+@app.route('/verificando/login/', methods=['POST'])
+def verificando_login():
+    cur.execute("SELECT email, senha FROM usuarios")
+    verificando_registros= cur.fetchall()
+
+    for registro in verificando_registros:
+        if request.form['email'] == registro[0]:
+            if int(request.form['senha']) == registro[1]:
+                return redirect('/login/')
+
+    return redirect('/cadastro/')
+
+#====================LOGIN USUARIO=========================
 
 #=======================================================
 
